@@ -1,0 +1,65 @@
+Sample 1:
+Input
+1
+6
+3 2 5 4 1 7
+
+Output
+0 1 0 2 1 0
+
+
+
+/* this solve function does the following
+1-> (what-take the size of the array)  (why- we have to work on the inputs of the array as given in qstn)
+2-> create an array timeLine to keep track of deletion day (why- at the end we have to print the day at which element gets deleted, so to keep track of that we take array equal to size of the original array)
+2-> i-> take a stack of tuple of three variable ( why- to process each element and keep track of its endtime and index to update in timeline array) (why stack?-> because,it will fetch us the last element entered and second last easily, so if we have to delete prev element so we do not have to separately reduce the size of array but instead pop and input curr element so the size is reduced now and since we are calculating in one traversal we do not need to worry about the poped val)
+3-> for size n of array we run a loop and in that we do the following
+    i-> take a input of original array (why- we have to work on the elemets of the original array so we take input one by one to process it in stack by taking care of its endtime as we are using stack so on each step we can process element)
+    ii-> take endtime as 0 for every new input (why- because suru mai sbka 0 tha and jiska day 1 pe del nhi hoga, uska endtime mai +1 hoke stack mai jayga aur jab stack chota hone lagega(ele del honepe) to humare pass puaran endtime hoga ab bache elements ka to wo update hota rhega )
+    iii-> a while loop if stack size is >=2 coz there are two elements req in stack to start processing elements and also , we have to keep 1st and last.
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+void solve(){
+    int n;
+    cin>>n;
+    vector<int> timeline(n,0);
+    stack<tuple<int,int,int>> stk;
+    for(int i=0;i<n;i++){
+        int a, end_time=0;
+        cin>>a;
+        
+        while(stk.size()>=2){
+            auto x=stk.top();
+            stk.pop();
+            auto y=stk.top();
+            
+            //now here  , comparing element value and we find it less according to the condition we update endtime and timeline and x remains poped out
+            if(get<0>(x) < min(get<0>(y) , a) ){
+                end_time = 1 + max(end_time , get<1>(x));
+                timeline[get<2>(x)]=end_time;
+            }
+            //if middle element is greater than we push it again and break out , so the curr element ,the third element can be pushed in , so order remains same
+            else{
+                stk.push(x);
+                break;
+            }
+        }
+        stk.push({a,end_time,i});
+    }
+    for(auto x:timeline) cout<<x<<" ";
+    cout<<endl;
+}
+
+int main() {
+    //test cases leke unpe while loop run kr rheee for every test case
+    int t;
+    cin>>t;
+    while(t--){
+        //for each individual test case solve fun call kr rhee
+        solve();
+    }
+	// your code goes here
+	return 0;
+}
